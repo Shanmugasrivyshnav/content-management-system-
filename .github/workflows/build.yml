@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./backend
-          file: ./backend/Dockerfile
+          file: ./backend/Dockerfile/.dockerignore
           push: true
           tags: |
             ${{ env.DOCKER_USER }}/cms-backend:latest
@@ -57,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./admin-frontend
-          file: ./admin-frontend/Dockerfile
+          file: ./admin-frontend/Dockerfile/.dockerignore
           push: true
           tags: |
             ${{ env.DOCKER_USER }}/cms-admin:latest
@@ -84,7 +84,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./public-frontend
-          file: ./public-frontend/Dockerfile
+          file: ./public-frontend/Dockerfile/.dockerignore
           push: true
           tags: |
             ${{ env.DOCKER_USER }}/cms-public:latest
