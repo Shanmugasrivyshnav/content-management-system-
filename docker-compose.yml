@@ -1,35 +1,62 @@
-version: "3.9"
-
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: cms-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "ShAnmukh@sri2075KG"
+      MYSQL_DATABASE: cms
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    container_name: cms_backend
+    container_name: cms-backend
+    restart: unless-stopped
     ports:
       - "5000:5000"
     env_file:
       - ./backend/.env
-    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+    depends_on:
+      - mysql
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
 
   admin:
     build:
       context: ./admin-frontend
-      dockerfile: Dockerfile
-    container_name: cms_admin
+    container_name: cms-admin
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       - backend
-    restart: unless-stopped
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./admin-frontend:/app
+      - /app/node_modules
 
   public:
     build:
       context: ./public-frontend
-      dockerfile: Dockerfile
-    container_name: cms_public
+    container_name: cms-public
+    restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "3000:3000"
     depends_on:
       - backend
-    restart: unless-stopped
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./public-frontend:/app
+      - /app/node_modules
+
+volumes:
+  mysql_data:
